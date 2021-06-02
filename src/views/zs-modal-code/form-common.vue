@@ -1,0 +1,210 @@
+<template>
+    <div>
+        <div class="zs-btn-content">
+			<div class="zs-search-widh">
+				<h2 class="zs-type-title">
+
+				</h2>
+			</div>
+			<!-- 操作按钮区域 -->
+			<div class="zs-btn-list" style="padding: 15px 22px;">
+				<div class="btn-compose" type="primary" @click="saveBaseInfo">
+					<img src="../../../../images/newsimg/baocun.png" style="width: 16px;" />
+					<span>保存</span>
+				</div>
+			</div>
+		</div>
+        <div class="zs-form-edit">
+			<h2 class="zs-form-title">基础信息</h2>
+			<div class="zs-form-kuang">
+                <Form ref="formItem" class="zs-form-content" :model="formItem" :label-width="120" :rules="ruleValidate"
+					style="margin: 0 !important;">
+					<Row>
+						<Col span="6">
+						<FormItem label="申请单编号" prop="code">
+							<Input disabled v-model="formItem.code" placeholder="保存后自动生成" type="text"></Input>
+						</FormItem>
+						</Col>
+						<Col span="6">
+						<FormItem label="申请人名称" prop="employeeName">
+							<Input disabled v-model="formItem.employeeName" type="text"></Input>
+						</FormItem>
+						</Col>
+                        <Col span="6">
+						<FormItem label="所属部门" prop="orgName">
+							<Input disabled v-model="formItem.orgName" type="text"></Input>
+						</FormItem>
+						</Col>
+						<Col span="6">
+						<FormItem label="请假类型" prop="type" class="ding-search" style="position: relative;">
+							<Select filterable v-model="formItem.type">
+								<Option value="01">婚假</Option>
+								<Option value="02">事假</Option>
+								<Option value="03">调休</Option>
+								<Option value="04">病假</Option>
+								<Option value="05">年假</Option>
+								<Option value="06">陪产假</Option>
+								<Option value="07">路途假</Option>
+								<Option value="08">产检假</Option>
+								<Option value="09">产假</Option>
+								<Option value="10">其它</Option>
+							</Select>
+						</FormItem>
+						</Col>
+						<Col span="6">
+						<FormItem label="请假时间" prop="leaveTime">
+							<DatePicker style="width: 280px !important;margin-left: 5px;" v-model="leaveTime" @on-change="dateRangeChange" type="datetimerange" format="yyyy-MM-dd HH:mm" placement="bottom-end" placeholder="请选择时间段" transper></DatePicker>
+						</FormItem>
+						</Col>
+						<Col span="6">
+						<FormItem label="请假天数" prop="contactType">
+							<Input disabled v-model="formItem.leaveDays" type="text"></Input>
+						</FormItem>
+						</Col>
+					</Row>
+                    <Row>
+                        <Col span="12">
+						<FormItem label="请假事由" prop="reason">
+							<Input id="remark" v-model="formItem.reason"
+								type="textarea" :autosize="{minRows: 5,maxRows: 5}" />
+						</FormItem>
+						</Col>
+                    </Row>
+				</Form>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+	import Util from '@/libs/util';
+	import zsCommon from '@/libs/common';
+	import Cookies from 'js-cookie';
+    export default {
+        name: '',
+        data() {
+            return {
+                formItem: {},
+                leaveType: [],
+                leaveTime: [],
+                parentInfoId: undefined,
+                ruleValidate: {},
+            }
+        },
+        methods: {
+            resetTime(){
+                this.formItem.startTime = zsCimCommon.getCurentTime(-1).substring(0,10) + " 00:00:00";
+                this.formItem.endTime = zsCimCommon.getCurentTime(-1).substring(0,10) + " 23:59:59";
+                let timeAttr = [];
+                timeAttr.push(this.beginTime);
+                timeAttr.push(this.endTime);
+                this.leaveTime = timeAttr;
+            },
+            dateRangeChange(date){
+                if(date[0] == "" || date[1] == ""){
+                    this.formItem.startTime = null;
+                    this.formItem.endTime = null;
+                    this.resetTime();
+                    return;
+                }
+                this.formItem.startTime = Util.formatDate(date[0],"yyyy-MM-dd hh:mm:ss");
+                this.formItem.endTime = Util.formatDate(date[1],"yyyy-MM-dd hh:mm:ss");
+            },
+            saveBaseInfo() {
+                this.$refs['formItem'].validate((valid) => {
+                    if (valid) {
+                        //新增
+                        if (this.parentInfoId == undefined) {
+                            //加载中
+                            Util.loading(this, "保存中...");
+                            Util.ajax({
+                                method: 'POST',
+                                url: '/zs-erp/zsErpLeave/add',
+                                data: {
+                                    data: this.formItem,
+                                    fileList: this.uploadList,
+                                }
+                            }).then(res => {
+                                if (res.data.code == zsCommon.CODE_SUCCESS) {
+                                    Util.successMsg(this, zsCommon.INFO_SAVE_SUCCESS);
+                                    this.parentInfoId = res.data.id; //保存返回主数据的主键ID
+                                    this.formItem.code = res.data.leaveCode;
+                                    this.$forceUpdate();
+                                } else {
+                                    Util.errorMsg(this, zsCommon.INFO_SAVE_ERROR);
+                                }
+                                //加载结束
+                                Util.closeLoading(this);
+                            });
+                        } else {
+                            //加载中
+                            Util.loading(this, "保存中...");
+                            this.formItem.id = this.parentInfoId
+                            //更新
+                            Util.ajax({
+                                method: 'POST',
+                                url: '/zs-erp/zsErpLeave/update',
+                                data: {
+                                    data: this.formItem,
+                                    fileList: this.uploadList,
+                                }
+                            }).then(res => {
+                                if (res.data.code == zsCommon.CODE_SUCCESS) {
+                                    Util.successMsg(this, zsCommon.INFO_SAVE_SUCCESS);
+                                    this.getParams();
+                                } else {
+                                    Util.errorMsg(this, zsCommon.INFO_SAVE_ERROR);
+                                }
+                                //加载结束
+                                Util.closeLoading(this);
+                            });
+                        }
+                    }
+                })
+            },
+            getParams() {
+                // 取到路由带过来的参数
+				if (this.parentInfoId == undefined || this.parentInfoId == 0) {
+					this.parentInfoId = this.$route.params.id;
+				}
+				if (this.parentInfoId == 0) {
+					this.parentInfoId = undefined;
+				}
+				if (this.parentInfoId != undefined) {
+					Util.loading(this, "加载中...");
+					Util.ajax({
+						method: 'POST',
+						url: '/zs-erp/zsErpLeave/queryByPrimaryKey',
+						data: {
+							id: this.parentInfoId,
+						}
+					}).then(res => {
+						if (res.data.code == zsCommon.CODE_SUCCESS) {
+							if (res.data.data != undefined) {
+                                if (!Util.isEmpty(res.data.data.startTime) && !Util.isEmpty(res.data.data.endTime)) {
+                                    this.leaveTime = [Util.formatDate(res.data.data.startTime,"yyyy-MM-dd hh:mm:ss"), Util.formatDate(res.data.data.endTime,"yyyy-MM-dd hh:mm:ss")]
+                                }
+								this.formItem = res.data.data;
+							}
+						}
+						Util.closeLoading(this);
+					});
+				} else {
+                    this.formItem.employeeId = Cookies.get("employeeId");
+					this.formItem.employeeName = Cookies.get("employeeName");
+					this.formItem.orgId = Cookies.get("orgId");
+					this.formItem.orgName = Cookies.get("orgName");
+					this.formItem.workflowStatus = "01";
+					this.$forceUpdate();
+                }
+            },
+        },
+        mounted() {
+            this.getParams();
+        }
+    }
+</script>
+
+<style lang="css" scoped>
+    
+</style>
