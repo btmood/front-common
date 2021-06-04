@@ -54,7 +54,8 @@
 						type: 'selection',
 						width: 60,
 						align: 'center'
-					}, {
+					},
+					{
 						type: 'index',
 						title: '序号',
 						width: 70,
