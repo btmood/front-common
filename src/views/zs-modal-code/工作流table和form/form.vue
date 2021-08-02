@@ -259,7 +259,7 @@
                             Util.loading(this, "保存中...");
                             Util.ajax({
                                 method: 'POST',
-                                url: moduleURL + 'add', //拼接URL
+                                url: this.moduleURL + 'add', //拼接URL
                                 data: {
                                     data: this.formItem,
                                     fileList: this.uploadList,
@@ -287,7 +287,7 @@
                             //更新
                             Util.ajax({
                                 method: 'POST',
-                                url: moduleURL + 'update', //拼接URL
+                                url: this.moduleURL + 'update', //拼接URL
                                 data: {
                                     data: this.formItem,
                                     fileList: this.uploadList,
@@ -335,7 +335,7 @@
 					Util.loading(this, "加载中...");
 					Util.ajax({
 						method: 'POST',
-						url: moduleURL + 'queryByPrimaryKey', //拼接URL
+						url: this.moduleURL + 'queryByPrimaryKey', //拼接URL
 						data: {
 							id: this.parentInfoId,
 						}
@@ -390,7 +390,7 @@
 				this.$Spin.show();
 				Util.ajax({
 					method: 'POST',
-					url: moduleURL + 'startWorkflow', //拼接URL
+					url: this.moduleURL + 'startWorkflow', //拼接URL
 					data: {
 						programeId: this.parentInfoId,
 					}
@@ -417,7 +417,7 @@
 			},
             back() {
 				this.$router.push({
-					path: tablePageName //table菜单名
+					path: this.tablePageName //table菜单名
 				});
 			},
             //查询历史节点信息
@@ -503,7 +503,7 @@
 			},
 			myInitWorkflowImg() {
 				Util.ajax.get(
-					"/workflow/workflowBase/queryWorkflowImgByTableId?tableId=" + tableId, {
+					"/workflow/workflowBase/queryWorkflowImgByTableId?tableId=" + this.tableId, {
 						responseType: 'arraybuffer',
 					}).then(res => {
 					return 'data:image/png;base64,' + btoa(new Uint8Array(res.data)
@@ -590,7 +590,7 @@
 				this.$Spin.show();
 				Util.ajax({
 					method: 'POST',
-					url: moduleURL + 'rollback', //拼接URL
+					url: this.moduleURL + 'rollback', //拼接URL
 					data: params
 				}).then(res => {
 					this.$Spin.hide();
@@ -623,7 +623,7 @@
 				this.$Spin.show();
 				Util.ajax({
 					method: 'POST',
-					url: moduleURL + 'completeWorkflow', //拼接URL
+					url: this.moduleURL + 'completeWorkflow', //拼接URL
 					data: data
 				}).then(res => {
 					this.$Spin.hide();

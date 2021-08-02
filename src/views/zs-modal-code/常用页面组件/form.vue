@@ -6,7 +6,7 @@
                 <!-- input text -->
                 <Col span="6">
                     <FormItem label="申请单编号" prop="code">
-                        <Input disabled v-model="formItem.code" placeholder="保存后自动生成" type="text"></Input>
+                        <Input v-model="formItem.code" placeholder="保存后自动生成" type="text"></Input>
                     </FormItem>
                 </Col>
                 <!-- input 金额 -->

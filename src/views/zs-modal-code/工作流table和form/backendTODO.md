@@ -5,7 +5,7 @@
 
 需要添加更新工作流状态的代码
 
-```
+```java
 public Map<String,Object> startWorkflow(@RequestBody Map<String,Object> params,Authentication authentication) {
         if (judgeBlank(params.get("programeId"))) {
             return baseResultMap;
@@ -42,7 +42,7 @@ public Map<String,Object> startWorkflow(@RequestBody Map<String,Object> params,A
 
 工作流驳回需要添加更新表状态代码
 
-```
+```java
 public Map<String,Object> workflowRollback(@RequestBody Map<String,Object> params,Authentication authentication) {
         Map<String,Object> resultMap = new HashMap<String,Object>();
         if (judgeBlank(params.get("taskId"))) {
@@ -104,7 +104,7 @@ public Map<String,Object> workflowRollback(@RequestBody Map<String,Object> param
 
 更新工作流状态需要添加更新表状态代码
 
-```
+```java
 public Map<String,Object> completeWorkflow(@RequestBody Map<String,Object> params,Authentication authentication) {
         Map<String,Object> resultMap = new HashMap<String,Object>();
         if (judgeBlank(params.get("taskId"))) {

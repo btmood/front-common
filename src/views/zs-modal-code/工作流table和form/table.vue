@@ -140,7 +140,7 @@
         methods: {
             add() {
                 this.$router.push({
-					path: editPageName + '0'
+					path: this.editPageName + '0'
 				});
             },
             del() {
@@ -162,7 +162,7 @@
 					onOk: () => {
 						Util.ajax({
 							method: 'POST',
-							url: moduleURL + 'delete',
+							url: this.moduleURL + 'delete',
 							data: {
 								data: {
 									ids: ids
@@ -191,7 +191,7 @@
 				this.spinShow = true;
 				Util.ajax({
 					method: 'POST',
-					url: moduleURL + 'query',
+					url: this.moduleURL + 'query',
 					data: {
 						currentPage: currentPage,
 						pageSize: pageSize,
@@ -225,7 +225,7 @@
 			},
             edit(row, index) {
 				this.$router.push({
-					path: editPageName + row.id
+					path: this.editPageName + row.id
 				});
 			},
         },

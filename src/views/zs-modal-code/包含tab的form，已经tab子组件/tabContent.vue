@@ -29,7 +29,7 @@
 					@on-page-size-change="changePageSize" show-total show-elevator show-sizer transfer></Page>
 			</div>
 		</div>
-        <Modal v-model="addModal" title="借用记录编辑" :width="680" :mask-closable="false">
+        <Modal v-model="addModal" title="编辑" :width="680" :mask-closable="false">
             <Form ref="formItem" class="zs-form-content" :model="formItem" :label-width="120" :rules="validate" style="margin: 0 !important;">
                 <Row>
                     <Col span="24">
@@ -38,6 +38,10 @@
                     </Col>
                 </Row>
             </Form>
+			<div slot="footer">
+				<Button type="primary" @click="save">保存</Button>
+				<Button @click="cancel">取消</Button>
+			</div>
         </Modal>
     </div>
 </template>
@@ -238,7 +242,7 @@
 			cancel() {
 				this.formItem = {}
 				this.$refs.formItem.resetFields()
-				this.modal = false
+				this.addModal = false
 			},
         },
     }

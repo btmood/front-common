@@ -3,6 +3,7 @@
         <Modal :width="460" v-model="modal" title="标题" :mask-closable="false" class="zs-form-content">
 			<Form class="zs-form-content" ref="formItem" :model="formItem" :label-width="100" :rules="ruleValidate"
 				style="margin-top: 16px;">
+                <Row>
 					<Col span="24" class="textareaStyle">
 					<FormItem label="经办人" prop="employeeId">
 						<Input disabled v-model="formItem.employeeName" />
