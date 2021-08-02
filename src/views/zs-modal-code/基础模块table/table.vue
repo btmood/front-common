@@ -281,6 +281,7 @@
 			},
 			// 修改
 			edit(row, index) {
+                this.$refs.formItem.resetFields();
 				this.formItem = row;
 				this.tempCode = row.code;
 				this.editStoreModal = true;
